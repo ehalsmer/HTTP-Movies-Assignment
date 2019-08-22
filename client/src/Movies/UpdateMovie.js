@@ -1,62 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const UpdateMovie = (props) => {
-    const id = props.match.params.id
-    
-    return (
-        <p>Hi</p>
-        // <div>
-        // <h1>Update {id}</h1>
-        // <form onSubmit={handleSubmit}>
-        //   <input
-        //     type="text"
-        //     name="name"
-        //     onChange={changeHandler}
-        //     placeholder="name"
-        //     value={item.name}
-        //   />
-        //   <div className="baseline" />
-  
-        //   <input
-        //     type="number"
-        //     name="price"
-        //     onChange={changeHandler}
-        //     placeholder="Price"
-        //     value={item.price}
-        //   />
-        //   <div className="baseline" />
-  
-        //   <input
-        //     type="string"
-        //     name="imageUrl"
-        //     onChange={changeHandler}
-        //     placeholder="Image"
-        //     value={item.imageUrl}
-        //   />
-        //   <div className="baseline" />
-  
-        //   <input
-        //     type="string"
-        //     name="description"
-        //     onChange={changeHandler}
-        //     placeholder="Description"
-        //     value={item.description}
-        //   />
-        //   <div className="baseline" />
-  
-        //   <input
-        //     type="string"
-        //     name="shipping"
-        //     onChange={changeHandler}
-        //     placeholder="Shipping"
-        //     value={item.shipping}
-        //   />
-        //   <div className="baseline" />
-  
-        //   <button className="md-button form-button">Update</button>
-        // </form>
-        // </div>
-    )
-}
+const UpdateMovie = props => {
+  // console.log('props in updateMovie', props);
+
+  const initialMovie = {
+    id: 0,
+    title: "",
+    director: "",
+    metascore: 0,
+    stars: []
+  }
+  const [movie, setMovie] = useState(initialMovie);
+
+  useEffect(() => {
+    const id = props.match.params.id;
+    const currentMovie = props.movies.find(movie => `${movie.id}` === id);
+    if (currentMovie) setMovie(currentMovie);
+  }, [props.movies, props.match.params.id]);
+
+  const handleChange = e => {
+    e.preventDefault();
+    setMovie({ ...movie, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    axios.put(`http://localhost:5000/api/movies/${movie.id}`, movie)
+    .then(response => {
+        console.log('put response', response)
+        const newMoviesArr = props.movies.filter(mov => mov.id !== movie.id)
+        props.setMovies([...newMoviesArr, response.data])
+        props.history.push('/')
+    })
+    .catch(error => console.log(error))
+  };
+
+  return (
+    <div>
+      <h1>Update Movie</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="title"
+          onChange={handleChange}
+          placeholder="title"
+          value={movie.title}
+        />
+        <input
+          type="text"
+          name="director"
+          onChange={handleChange}
+          placeholder="director"
+          value={movie.director}
+        />
+        <input
+          type="number"
+          name="metascore"
+          onChange={handleChange}
+          placeholder="metascore"
+          value={movie.metascore}
+        />
+        {/* Insert subform to edit/add/remove stars */}
+        <button>Update</button>
+      </form>
+    </div>
+  );
+};
 
 export default UpdateMovie;

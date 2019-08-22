@@ -10,7 +10,9 @@ export default class MovieList extends Component {
 
     super(props);
     this.state = {
-      movies: props.movies
+      movies: props.movies.sort(function (a, b) {
+        return a.id - b.id;
+      })
     };
   }
 
