@@ -69,6 +69,14 @@ body {
   padding: 5px 10px;
   background-color: rgb(194, 153, 78);
 }
+.delete-button {
+  position: absolute;
+  top: 95px;
+  right: 25px;
+  border: 1px solid grey;
+  padding: 5px 10px;
+  background-color: rgb(230, 20, 20);
+}
 .save-button:hover {
   background-color: green;
   color: white;
@@ -77,6 +85,11 @@ body {
   background-color: rgb(131, 96, 0);
   color: white;
 }
+.delete-button:hover {
+  background-color: rgb(122, 0, 0);
+  color: white;
+}
+
 .movie-buttons {
   display: flex;
 }
