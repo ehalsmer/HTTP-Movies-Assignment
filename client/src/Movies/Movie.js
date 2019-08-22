@@ -10,6 +10,8 @@ export default class Movie extends React.Component {
   }
 
   componentDidMount() {
+    console.log('props in movie', this.state.props)
+
     this.fetchMovie(this.props.match.params.id);
   }
 
@@ -26,21 +28,43 @@ export default class Movie extends React.Component {
       .catch(err => console.log(err.response));
   };
 
-  saveMovie = () => {
+  
+
+  saveMovie = (e) => {
+    e.preventDefault();
     const addToSavedList = this.props.addToSavedList;
     addToSavedList(this.state.movie);
   };
 
+  updateMovie = (e) => {
+    e.preventDefault();
+    this.state.props.history.push(`/update-movie/${this.state.movie.id}`)
+  }
+
+  deleteMovie = (e) => {
+    e.preventDefault();
+    this.props.deleteMovie(this.state.movie.id)
+    this.props.history.push('/')
+    // .catch(err => console.log(err))
+  }
+
   render() {
+
     if (!this.state.movie) {
       return <div>Loading movie information...</div>;
     }
 
     return (
       <div className="save-wrapper">
-        <MovieCard movie={this.state.movie} />
+        <MovieCard movie={this.state.movie}/>
         <div className="save-button" onClick={this.saveMovie}>
           Save
+        </div>
+        <div className="edit-button" onClick={this.updateMovie}>
+          Edit
+        </div>
+        <div className="delete-button" onClick={this.deleteMovie}>
+          Delete
         </div>
       </div>
     );
